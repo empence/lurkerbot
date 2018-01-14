@@ -9,10 +9,10 @@
 		<title>LurkerBot for Reddit</title>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
-		<!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-		<link rel="stylesheet" href="assets/css/main.css" />
-		<!--[if lte IE 9]><link rel="stylesheet" href="assets/css/ie9.css" /><![endif]-->
-		<!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
+		<!--[if lte IE 8]><script src="{{ url_for('static', filename='js/ie/html5shiv.js') }}"></script><![endif]-->
+		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
+		<!--[if lte IE 9]><link rel="stylesheet" href="{{ url_for('static', filename='css/ie9.css') }}" /><![endif]-->
+		<!--[if lte IE 8]><link rel="stylesheet" href="{{ url_for('static', filename='css/ie8.css') }}" /><![endif]-->
 	</head>
 	<body>
 
@@ -24,7 +24,7 @@
 					</header>
 
 				<!-- Menu -->
-					
+
 
 				<!-- Banner -->
 					<section id="banner" class="major">
@@ -34,10 +34,10 @@
 							</header>
 							<div class="inner">
 								<p> Give LurkerBot a phrase or phrases to watch for, a subreddit to watch, and your email address, and LurkerBot will send you an email alert whenever that word or phrase is mentioned.  </p>
-								
+
 							</div>
 							<div class="major"><p> Already set up an alert? You can change it or remove it <a href="/returning.html"> here. </a></p>
-								
+
 							</div>
 						</div>
 					</section>
@@ -64,8 +64,8 @@
 									</ul>
 								</form>
 							</section>
-							
-	
+
+
 				<!-- Footer -->
 					<footer id="footer">
 						<div class="inner">
@@ -78,13 +78,13 @@
 			</div>
 
 		<!-- Scripts -->
-			<script src="assets/js/jquery.min.js"></script>
-			<script src="assets/js/jquery.scrolly.min.js"></script>
-			<script src="assets/js/jquery.scrollex.min.js"></script>
-			<script src="assets/js/skel.min.js"></script>
-			<script src="assets/js/util.js"></script>
-			<!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-			<script src="assets/js/main.js"></script>
+			<script src="{{ url_for('static', filename='css/main.css') }}"></script>
+			<script src="{{ url_for('static', filename='js/jquery.scrolly.min.js') }}"></script>
+			<script src="{{ url_for('static', filename='js/jquery.scrollex.min.js') }}"></script>
+			<script src="{{ url_for('static', filename='js/skel.min.js') }}"></script>
+			<script src="{{ url_for('static', filename='js/util.js') }}"></script>
+			<!--[if lte IE 8]><script src="{{ url_for('static', filename='js/ie/respond.min.js') }}"></script><![endif]-->
+			<script src="{{ url_for('static', filename='js/main.js') }} "></script>
 
 	</body>
 </html>
