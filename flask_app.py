@@ -5,7 +5,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/lurkerbot')
 def hello_world():
-    return 'This is my shiny new Flask app.'
+    return 'Hello from Flask!'
 
