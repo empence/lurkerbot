@@ -90,7 +90,7 @@ def login():
             return redirect(url_for("lurkerbot"))
         else:
             user = User.query.filter_by(username=request.form["username"]).first()
-            if user.check_password(request.form["password"]) and login_user(user):
+            if user.check_password(request.form["password"]) and login_user(user, remember = request.form.get("remember", "no") == "yes"):
                 flash("You've been logged in!")
                 return redirect(request.args.get('next') or url_for('lurkerbot'))
             else:
