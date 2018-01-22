@@ -2,7 +2,7 @@ import sys
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 import flask_login
-from flask_login import UserMixin, LoginManager
+from flask_login import UserMixin, LoginManager, current_user, logout_user, login_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 
@@ -64,7 +64,8 @@ def base():
 
 @app.route('/lurkerbot/logout',)
 def logout():
-    return ""
+    logout_user()
+    return redirect(url_for("lurkerbot"))
 
 @app.route('/lurkerbot/edit',)
 def edit():
@@ -109,11 +110,7 @@ def login():
     elif request.method == "POST":
         user = User.query.filter_by(username=request.form["username"]).first()
         if user.check_password(request.form["password"]):
-            try:
-                flask_login.login_user(user, request.form["remember"])
-            except:
-                print('flask_app 113%s %s' % (request.form["username"], request.form["password"]), file=sys.stderr)
-
+            login_user(user)
             return redirect(url_for("lurkerbot"))
         else:
             return redirect(url_for("login"))
