@@ -1,13 +1,16 @@
 import sys
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
-import flask_login
-from flask_login import UserMixin, LoginManager, current_user, logout_user, login_user
+from flask_login import UserMixin, LoginManager, current_user, logout_user, login_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 from config import Config
 
 app = Flask(__name__)
 login = LoginManager(app)
+
+@login.unauthorized_handler
+def unauthorized_callback():
+    return redirect('/login?next=' + request.path)
 
 app.config.from_object(Config)
 
@@ -63,19 +66,42 @@ def base():
     return render_template('base.html', title="Base")
 
 @app.route('/lurkerbot/logout',)
+@login_required
 def logout():
     logout_user()
     return redirect(url_for("lurkerbot"))
 
 @app.route('/lurkerbot/edit',)
+@login_required
 def edit():
-    return ""
+    return render_template("edit.html")
+
+@app.route('/lurkerbot/login', methods=["GET", "POST"])
+def login():
+    if request.method == "GET":
+        if current_user.is_authenticated:
+            return redirect(url_for("lurkerbot"))
+        else:
+            return render_template("login.html", title="Login")
+    elif request.method == "POST":
+        if current_user.is_authenticated:
+            return redirect(url_for("lurkerbot"))
+        else:
+            user = User.query.filter_by(username=request.form["username"]).first()
+            if user.check_password(request.form["password"]) and login_user(user):
+                return redirect(request.args.get('next') or url_for('lurkerbot'))
+            else:
+                return redirect(url_for("login"))
 
 @app.route('/lurkerbot/', methods=["GET","POST"])
 @app.route('/lurkerbot', methods=["GET", "POST"])
+
 def lurkerbot():
     if request.method == "GET":
-        return render_template("index.html",)
+        if current_user.is_authenticated:
+            return redirect(url_for("edit"))
+        else:
+            return render_template("index.html")
     elif request.method == "POST":
         #split phrase by commas, strip leading and trailing spaces, create a new phrase object for each
         new_phrases = [Phrase(phrase=x.strip()) for x in request.form["phrase"].split(",")]
@@ -100,20 +126,9 @@ def lurkerbot():
         db.session.add(new_alert)
 
         db.session.commit()
-
-        return redirect(url_for("lurkerbot"))
-
-@app.route('/lurkerbot/login', methods=["GET", "POST"])
-def login():
-    if request.method == "GET":
-        return render_template("login.html", title="Login")
-    elif request.method == "POST":
         user = User.query.filter_by(username=request.form["username"]).first()
-        if user.check_password(request.form["password"]):
-            login_user(user)
-            return redirect(url_for("lurkerbot"))
-        else:
-            return redirect(url_for("login"))
+        login_user(user)
+        return redirect(url_for("lurkerbot"))
 
 
 
