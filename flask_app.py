@@ -1,5 +1,5 @@
 import sys
-from flask import Flask, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, current_user, logout_user, login_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -63,12 +63,14 @@ def load_user(id):
 
 @app.route('/base',)
 def base():
+    flash("All ur bases is belongs to us")
     return render_template('base.html', title="Base")
 
 @app.route('/lurkerbot/logout',)
 @login_required
 def logout():
     logout_user()
+    flash("You've been successfully logged out.")
     return redirect(url_for("lurkerbot"))
 
 @app.route('/lurkerbot/edit',)
@@ -89,13 +91,18 @@ def login():
         else:
             user = User.query.filter_by(username=request.form["username"]).first()
             if user.check_password(request.form["password"]) and login_user(user):
+                flash("You've been logged in!")
                 return redirect(request.args.get('next') or url_for('lurkerbot'))
             else:
+                flash("Your login was unsuccessful. Check your password, username, and that you actually have a LurkerBot account.")
                 return redirect(url_for("login"))
+@app.route('/lurkerbot/account', methods=["GET", "POST"])
+@login_required
+def account():
+    return render_template("account.html")
 
 @app.route('/lurkerbot/', methods=["GET","POST"])
 @app.route('/lurkerbot', methods=["GET", "POST"])
-
 def lurkerbot():
     if request.method == "GET":
         if current_user.is_authenticated:

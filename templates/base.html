@@ -37,6 +37,7 @@
 						<ul class="links">
 							{% if current_user.is_authenticated %}
 							    <li><a href="{{url_for('edit')}}">Add, delete or remove alerts</a></li>
+    							<li><a href="{{url_for('account')}}">Account settings</a></li>
     							<li><a href="{{url_for('logout')}}">Logout</a></li>
                             {% else%}
 	    						<li><a href="{{url_for('lurkerbot')}}">Home</a></li>
@@ -45,7 +46,17 @@
 						</ul>
 					</nav>
 
-
+                {% with messages = get_flashed_messages() %}
+                  {% if messages %}
+                    <div class=inner>
+                    <ul style="list-style:none;">
+                    {% for message in messages %}
+                      <li style="color:rgba(244, 244, 255, 0.6);">{{ message }}</li>
+                    {% endfor %}
+                    </ul>
+                    </div>
+                  {% endif %}
+                {% endwith %}
                 {% block content %}{% endblock %}
 
 
