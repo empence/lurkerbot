@@ -1,4 +1,4 @@
-
+import sys
 from flask import Flask, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 import flask_login
@@ -58,11 +58,23 @@ class Phrase(db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
+@app.route('/base',)
+def base():
+    return render_template('base.html', title="Base")
 
+@app.route('/lurkerbot/logout',)
+def logout():
+    return ""
+
+@app.route('/lurkerbot/edit',)
+def edit():
+    return ""
+
+@app.route('/lurkerbot/', methods=["GET","POST"])
 @app.route('/lurkerbot', methods=["GET", "POST"])
 def lurkerbot():
     if request.method == "GET":
-        return render_template("index.html")
+        return render_template("index.html",)
     elif request.method == "POST":
         #split phrase by commas, strip leading and trailing spaces, create a new phrase object for each
         new_phrases = [Phrase(phrase=x.strip()) for x in request.form["phrase"].split(",")]
@@ -93,14 +105,18 @@ def lurkerbot():
 @app.route('/lurkerbot/login', methods=["GET", "POST"])
 def login():
     if request.method == "GET":
-        return render_template("login.html")
+        return render_template("login.html", title="Login")
     elif request.method == "POST":
         user = User.query.filter_by(username=request.form["username"]).first()
         if user.check_password(request.form["password"]):
-            flask_login.login_user(user, request.form["remember"])
+            try:
+                flask_login.login_user(user, request.form["remember"])
+            except:
+                print('flask_app 113%s %s' % (request.form["username"], request.form["password"]), file=sys.stderr)
+
             return redirect(url_for("lurkerbot"))
         else:
-            return redirect(url_for('login'))
+            return redirect(url_for("login"))
 
 
 
