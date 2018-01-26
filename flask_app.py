@@ -16,10 +16,10 @@ app.config.from_object(Config)
 
 
 SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-    username="empence",
-    password="JJaOHH81TMC3",
-    hostname="empence.mysql.pythonanywhere-services.com",
-    databasename="empence$alerts",
+    username=USERNAME,
+    password=PASSWORD,
+    hostname=HOSTNAME,
+    databasename=DATABASENAME,
 )
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
