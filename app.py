@@ -3,7 +3,6 @@ from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, current_user, logout_user, login_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
-from config import Config
 
 app = Flask(__name__)
 login = LoginManager(app)
@@ -11,15 +10,16 @@ login = LoginManager(app)
 @login.unauthorized_handler
 def unauthorized_callback():
     return redirect('/login?next=' + request.path)
-
-app.config.from_object(Config)
-
+_USERNAME = ""
+_PASSWORD = ""
+_HOSTNAME = ""
+_DATABASENAME = ""
 
 SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-    username=USERNAME,
-    password=PASSWORD,
-    hostname=HOSTNAME,
-    databasename=DATABASENAME,
+    username=_USERNAME,
+    password=_PASSWORD,
+    hostname=_HOSTNAME,
+    databasename=_DATABASENAME,
 )
 app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
