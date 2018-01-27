@@ -9,15 +9,18 @@ import os
 app = Flask(__name__)
 login = LoginManager(app)
 
+app.secret_key = os.environ['SECRET_KEY']
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+db = SQLAlchemy(app)
+
+
 
 @login.unauthorized_handler
 def unauthorized_callback():
     return redirect('/login?next=' + request.path)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
-app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-db = SQLAlchemy(app)
 
 
 class User(UserMixin, db.Model):
