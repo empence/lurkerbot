@@ -3,6 +3,8 @@ from flask import Flask, flash, redirect, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, current_user, logout_user, login_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
+import os
+
 
 app = Flask(__name__)
 login = LoginManager(app)
