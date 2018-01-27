@@ -7,21 +7,12 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 login = LoginManager(app)
 
+
 @login.unauthorized_handler
 def unauthorized_callback():
     return redirect('/login?next=' + request.path)
-_USERNAME = ""
-_PASSWORD = ""
-_HOSTNAME = ""
-_DATABASENAME = ""
 
-SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
-    username=_USERNAME,
-    password=_PASSWORD,
-    hostname=_HOSTNAME,
-    databasename=_DATABASENAME,
-)
-app.config["SQLALCHEMY_DATABASE_URI"] = SQLALCHEMY_DATABASE_URI
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
@@ -66,19 +57,19 @@ def base():
     flash("All ur bases is belongs to us")
     return render_template('base.html', title="Base")
 
-@app.route('/lurkerbot/logout',)
+@app.route('/logout',)
 @login_required
 def logout():
     logout_user()
     flash("You've been successfully logged out.")
     return redirect(url_for("lurkerbot"))
 
-@app.route('/lurkerbot/edit',)
+@app.route('/edit',)
 @login_required
 def edit():
     return render_template("edit.html")
 
-@app.route('/lurkerbot/login', methods=["GET", "POST"])
+@app.route('/login', methods=["GET", "POST"])
 def login():
     if request.method == "GET":
         if current_user.is_authenticated:
@@ -96,13 +87,13 @@ def login():
             else:
                 flash("Your login was unsuccessful. Check your password, username, and that you actually have a LurkerBot account.")
                 return redirect(url_for("login"))
-@app.route('/lurkerbot/account', methods=["GET", "POST"])
+@app.route('/account', methods=["GET", "POST"])
 @login_required
 def account():
     return render_template("account.html")
 
-@app.route('/lurkerbot/', methods=["GET","POST"])
-@app.route('/lurkerbot', methods=["GET", "POST"])
+@app.route('/', methods=["GET", "POST"])
+@app.route('/home', methods=["GET", "POST"])
 def lurkerbot():
     if request.method == "GET":
         if current_user.is_authenticated:
