@@ -95,7 +95,7 @@ def login():
             else:
                 flash("Your login was unsuccessful. Check your password, username, and that you actually have a LurkerBot account.")
                 return redirect(url_for("login"))
-@app.route('/account', methods=["GET", "POST"])
+@app.route('/settings', methods=["GET", "POST"])
 @login_required
 def account():
     return render_template("account.html")
@@ -116,8 +116,9 @@ def lurkerbot():
         new_subreddits = [Subreddit(subreddit=x.strip()) for x in request.form["subreddit"].split(",")]
         for s in new_subreddits:
             db.session.add(s)
-
-        new_alert = Alert(subreddits=new_subreddits, phrases=new_phrases, last_checked=int(datetime.utcnow().timestamp()))
+        now = int(datetime.utcnow().timestamp())
+        sys.stderr.write("---------Hi friendo, added new alert at time " + now)
+        new_alert = Alert(subreddits=new_subreddits, phrases=new_phrases, last_checked=now)
 
         user = User.query.filter_by(username=request.form["username"]).first()
         if user:
