@@ -21,7 +21,7 @@ def main():
         for submission in reddit.subreddit(subreddits).submissions(start=alert.last_checked):
             for phrase in Phrase.query.filter_by(alert=alert).all():
                 if phrase.lower() in submission.selftext.lower():
-                    print("Hello " + str(User.query.get(alert.user_id).username) + "! LurkerBot found a mention of the phrase", str(phrase), "and since you set up an alert for that phrase, you're getting a message about it. Take a look:" submission.shortlink())
+                    print("Hello " + str(User.query.get(alert.user_id).username) + "! LurkerBot found a mention of the phrase", str(phrase), "and since you set up an alert for that phrase, you're getting a message about it. Take a look:", submission.shortlink())
         #now that we've checked all the alerts that existed as of time "now" (when we requested all the relevant submissions)
         #we have to record that we've checked all submissions from the time period (alert.last_checked, now). 
         alert.last_checked = now
