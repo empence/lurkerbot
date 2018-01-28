@@ -117,8 +117,7 @@ def lurkerbot():
         for s in new_subreddits:
             db.session.add(s)
         now = int(datetime.utcnow().timestamp())
-        print("---------Hi friendo, added new alert at time " + str(now))
-        new_alert = Alert(subreddits=new_subreddits, phrases=new_phrases, last_checked=now)
+        new_alert = Alert(subreddits=new_subreddits, phrases=new_phrases, last_checked=now) 
 
         user = User.query.filter_by(username=request.form["username"]).first()
         if user:
