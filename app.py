@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, current_user, logout_user, login_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+from datetime import datetime
 
 
 app = Flask(__name__)
@@ -40,6 +41,8 @@ class Alert(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id")) # a user ID
     subreddits = db.relationship('Subreddit', backref='alerts', lazy=True)
     phrases = db.relationship('Phrase', backref='alerts', lazy=True)
+    last_checked = db.Column(db.BigInteger)
+
 
 class Subreddit(db.Model):
     __tablename__ = "subreddits"
@@ -114,7 +117,7 @@ def lurkerbot():
         for s in new_subreddits:
             db.session.add(s)
 
-        new_alert = Alert(subreddits=new_subreddits, phrases=new_phrases)
+        new_alert = Alert(subreddits=new_subreddits, phrases=new_phrases, last_checked=int(datetime.utcnow().timestamp()))
 
         user = User.query.filter_by(username=request.form["username"]).first()
         if user:
