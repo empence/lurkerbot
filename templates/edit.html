@@ -2,6 +2,35 @@
 
 {%block content%}
 <section>
-    Hi, I'm a alert-editing page!
+    
+    <div class="table-wrapper">
+        <form>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Phrases (comma-separated)</th>
+                        <th>Subreddits (comma-separated)</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {% for alert in alerts%}
+                    <tr>
+                        <td><input type="text" name="phrases-{{loop.index0}}" id="phrases-{{loop.index0}}" value="{% for phrase in alert.phrases%}{{phrase.phrase}}, {%endfor%}"/></td>
+                        <td><input type="text" name="subreddits-{{loop.index0}}" id="subreddits-{{loop.index0}}" value="{% for subreddit in alert.subreddits%}{{subreddits.subreddit}}, {%endfor%}"/></td>
+                        <td><input type="checkbox" id="delete-{{loop.index0}}" name="delete-{{loop.index0}}" checked></td>
+                    </tr>
+                  {%endfor}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <a href="#" class="button small">+</a>
+                    </tr>
+                </tfoot>
+            </table>
+            <input type="submit" value="Submit" class="special" />
+        </form>
+    </div>
+    {$endfor%}
 </section>
 {%endblock%}
