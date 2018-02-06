@@ -75,8 +75,7 @@ def logout():
 @app.route('/edit',)
 @login_required
 def edit():
-    u = current_user()
-    alerts = Alert.query.filter_by(user_id=u.id).all()
+    alerts = Alert.query.filter_by(user_id=current_user.id).all()
     return render_template("edit.html", title="Edit alerts", alerts=alerts)
 
 @app.route('/login', methods=["GET", "POST"])
