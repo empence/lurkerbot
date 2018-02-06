@@ -17,6 +17,53 @@
 		<link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}" />
 		<!--[if lte IE 9]><link rel="stylesheet" href="{{ url_for('static', filename='css/ie9.css') }}" /><![endif]-->
 		<!--[if lte IE 8]><link rel="stylesheet" href="{{ url_for('static', filename='css/ie8.css') }}" /><![endif]-->
+
+         <script type='text/javascript'>
+        function addFields(){
+            // Container <div> where dynamic content will be placed
+            var container = document.getElementById("edit-container");
+            // Clear previous contents of the container
+            var next_row_number = container.childElementCount
+            
+            // Append a node with a random text
+            // Create an <input> element, set its type and name attributes
+            var new_row = document.createElement("tr");
+            var new_phrases = document.createElement("td")
+            var new_subreddits = document.createElement("td")
+            var new_delete = document.createElement("td")
+
+            var new_phrase_input = document.createElement("input")
+            var new_subreddit_input = document.createElement("input")
+            var new_delete_input = document.createElement("input")
+            var new_delete_label = document.createElement("label")
+
+            new_phrase_input.setAttribute("type", "text")
+            new_phrase_input.setAttribute("name", "phrases-" + next_row_number)
+            new_phrase_input.setAttribute("id", "phrases-" + next_row_number)
+            new_phrases.appendChild(new_phrase_input)
+
+            new_subreddit_input.setAttribute("type", "text")
+            new_subreddit_input.setAttribute("name", "subreddits-" + next_row_number)
+            new_subreddit_input.setAttribute("id", "subreddits-" + next_row_number)
+            new_subreddits.appendChild(new_subreddit_input)     
+
+            new_delete_input.setAttribute("type", "checkbox")
+            new_delete_input.setAttribute("name", "delete-" + next_row_number)
+            new_delete_input.setAttribute("id", "delete-" + next_row_number)
+            new_delete.appendChild(new_delete_input)
+
+            new_delete_label.setAttribute("for", "delete-" + next_row_number)
+            new_delete.appendChild(new_delete_label)
+
+            new_row.appendChild(new_phrases)
+            new_row.appendChild(new_subreddits)
+            new_row.appendChild(new_delete)
+
+            container.appendChild(new_row);
+
+
+        }
+        </script>
 	</head>
 	<body>
 
