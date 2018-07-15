@@ -5,28 +5,35 @@ import praw
 from datetime import datetime
 
 def main():
-    #getting secrets for connecting to Reddit via environment variable
     CLIENT_ID = os.environ['REDDIT_CLIENT_ID']
     CLIENT_SECRET = os.environ['REDDIT_CLIENT_SECRET']
     REDDIT_USERNAME = os.environ['REDDIT_USERNAME']
     REDDIT_PASSWORD = os.environ['REDDIT_PW']
-    #connect to Reddit via PRAW
     reddit = praw.Reddit(user_agent="LurkerBot v0.1", client_id=CLIENT_ID, client_secret=CLIENT_SECRET, username=REDDIT_USERNAME, password=REDDIT_PASSWORD)
-
+    now = int(datetime.utcnow().timestamp())
     #iterate through all the alerts that we have
     for alert in Alert.query.all():        
-        subreddits = '+'.join([x.subreddit for x in Subreddit.query.filter_by(alert=alert.id).all()])
-        #for each alert, get all all the submissions it involves. 
-        now = int(datetime.utcnow().timestamp())
-        for submission in reddit.subreddit(subreddits).submissions(start=alert.last_checked):
+        for subreddit in Subreddit.query.filter_by(alert=alert.id): 
             for phrase in Phrase.query.filter_by(alert=alert.id).all():
-                if phrase.phrase.lower() in submission.selftext.lower():
-                    print("Hello " + str(User.query.get(alert.user_id).username) + "! LurkerBot found a mention of the phrase", str(phrase.phrase), "and since you set up an alert for that phrase, you're getting a message about it. Take a look:", submission.shortlink)
-            #now that we've checked all the alerts that existed as of time "now" (when we requested all the relevant submissions)
-        #we have to record that we've checked all submissions from the time period (alert.last_checked, now). 
+                """ 
+                 There is a correctness issue here: if a user makes a query for 
+                 which there are more than 1000 results for a single subreddit 
+                 in the last hour, then the 1000st and upward items will just...
+                 not show up. This is, however, really unlikely, as when I 
+                 searched "the" in r/all over the last hour, there were only 
+                 ~300 results. 
+                 Doing only one subreddit at a time helps prevent this, unlikely
+                 as it is. 
+                """
+                for submission in reddit.subreddit(subreddit.subreddit).search(query=phrase.phrase,sort='new',time_filter='day', limit=None):
+                    print(submission.created_utc, alert.last_checked)
+                    if submission.created_utc >= alert.last_checked: 
+                        print("Hello " + str(User.query.get(alert.user_id).username) + "! LurkerBot found a mention of the phrase", str(phrase.phrase), "and since you set up an alert for that phrase, you're getting a message about it. Take a look:", submission.shortlink)
+                    else: 
+                    # we've gone backward into posts we've already looked at, 
+                    # we should stop and move onto the next phrase. 
+                        break
         alert.last_checked = now
-
-
     db.session.commit()
 if __name__ == "__main__":
     main()
