@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, current_user, logout_user, login_user, login_required
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
+from flask_migrate import Migrate
 from datetime import datetime
 
 
@@ -16,6 +17,7 @@ app.config["SQLALCHEMY_POOL_RECYCLE"] = 299
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
+migrate = Migrate(app, db)
 
 
 @login.unauthorized_handler
@@ -41,7 +43,8 @@ class Alert(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("users.id")) # a user ID
     subreddits = db.relationship('Subreddit', backref='alerts', lazy=True)
     phrases = db.relationship('Phrase', backref='alerts', lazy=True)
-    last_checked = db.Column(db.BigInteger)
+    last_seen = db.Column(db.String(20)) #the id of the last post seen from this alert
+
 
 
 class Subreddit(db.Model):

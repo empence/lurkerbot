@@ -25,15 +25,19 @@ def main():
                  Doing only one subreddit at a time helps prevent this, unlikely
                  as it is. 
                 """
-                for submission in reddit.subreddit(subreddit.subreddit).search(query=phrase.phrase,sort='new',time_filter='day', limit=None):
-                    print(submission.created_utc, alert.last_checked)
-                    if submission.created_utc >= alert.last_checked: 
+                i = 0
+                for submission in reddit.subreddit(subreddit.subreddit).search(query=phrase.phrase,sort='new', limit=None):
+                    if i == 1: 
+                        last_seen = submission.fullname
+                    i+=1
+                    if submission.fullname != alert.last_seen: 
+                        reddit.redditor(User.query.get(alert.user_id).username)
                         print("Hello " + str(User.query.get(alert.user_id).username) + "! LurkerBot found a mention of the phrase", str(phrase.phrase), "and since you set up an alert for that phrase, you're getting a message about it. Take a look:", submission.shortlink)
                     else: 
                     # we've gone backward into posts we've already looked at, 
                     # we should stop and move onto the next phrase. 
                         break
-        alert.last_checked = now
+                alert.last_seen = last_seen
     db.session.commit()
 if __name__ == "__main__":
     main()
