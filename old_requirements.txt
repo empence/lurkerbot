@@ -14,7 +14,7 @@ gunicorn==19.7.1
 idna==2.5
 iso8601==0.1.12
 itsdangerous==0.24
-Jinja2==2.10
+Jinja2==2.11.3
 MarkupSafe==1.0
 matplotlib==2.0.2
 mccabe==0.6.1
