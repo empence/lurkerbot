@@ -34,7 +34,7 @@ pyserial==3.4
 psycopg2==2.7.3.2
 python-dateutil==2.6.1
 pytz==2017.2
-PyYAML==3.12
+PyYAML==5.4
 requests==2.18.4
 scipy==0.19.1
 serial==0.0.14
