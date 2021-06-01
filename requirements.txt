@@ -16,6 +16,6 @@ pycosat==0.6.1
 requests==2.18.4
 SQLAlchemy==1.2.2
 update-checker==0.16
-urllib3==1.22
+urllib3==1.26.5
 Werkzeug==0.14.1
 flask_migrate
